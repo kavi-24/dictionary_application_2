@@ -1,0 +1,3 @@
+home page with a search bar
+on search, words appear
+on click, go to meaning screen
