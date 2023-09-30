@@ -54,12 +54,12 @@ class _BookmarksState extends State<Bookmarks> {
           }
         },
         currentIndex: index,
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.bookmark),
             label: "Bookmarks",
           ),
