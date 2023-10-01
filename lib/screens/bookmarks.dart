@@ -29,14 +29,6 @@ class _BookmarksState extends State<Bookmarks> {
   //   });
   // }
 
-  String format(List<String> list) {
-    String ret = "";
-    for (String i in list) {
-      ret += "-\t\t\t\t$i\n";
-    }
-    return ret;
-  }
-
   String formatStr(String str) {
     return str.substring(1, str.length - 1);
   }

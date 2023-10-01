@@ -237,6 +237,54 @@ class _MeaningState extends State<Meaning> {
                       ),
                     ],
                   ),
+                  // isLoaded
+                  //     ? Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //         children: [
+                  //           Container(
+                  //             decoration: BoxDecoration(
+                  //               color: Colors.white.withOpacity(0.1),
+                  //               borderRadius: BorderRadius.circular(5),
+                  //             ),
+                  //             child: IconButton(
+                  //               onPressed: () {
+                  //                 speak();
+                  //               },
+                  //               icon: const Icon(
+                  //                 Icons.volume_up,
+                  //                 color: Colors.white,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           const SizedBox(width: 20),
+                  //           Container(
+                  //             decoration: BoxDecoration(
+                  //               color: Colors.white.withOpacity(0.1),
+                  //               borderRadius: BorderRadius.circular(5),
+                  //             ),
+                  //             child: IconButton(
+                  //               onPressed: () {
+                  //                 database.insertData(map);
+                  //                 ScaffoldMessenger.of(context).showSnackBar(
+                  //                   SnackBar(
+                  //                     duration:
+                  //                         const Duration(milliseconds: 1500),
+                  //                     content: Center(
+                  //                       child: Text(
+                  //                           '${map["word"]} added to bookmarks'),
+                  //                     ),
+                  //                   ),
+                  //                 );
+                  //               },
+                  //               icon: const Icon(
+                  //                 Icons.bookmark_add,
+                  //                 color: Colors.white,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     : SkeletonListTile(),
                   const SizedBox(height: 10),
                 ],
               ),
