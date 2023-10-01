@@ -1,8 +1,15 @@
 import 'package:dictionary_application/screens/home.dart';
+import 'package:dictionary_application/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => DatabaseHelper(),
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
