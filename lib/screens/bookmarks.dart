@@ -1,6 +1,7 @@
 import 'package:dictionary_application/screens/home.dart';
 import 'package:dictionary_application/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Bookmarks extends StatefulWidget {
   const Bookmarks({super.key});
@@ -25,14 +26,6 @@ class _BookmarksState extends State<Bookmarks> {
     setState(() {
       dbData = data;
     });
-  }
-
-  String format(List<String> list) {
-    String ret = "";
-    for (String i in list) {
-      ret += "-\t\t\t\t$i\n";
-    }
-    return ret;
   }
 
   String formatStr(String str) {
@@ -96,68 +89,97 @@ class _BookmarksState extends State<Bookmarks> {
             ),
             const SizedBox(height: 10),
             Flexible(
-              child: ListView.builder(
-                itemCount: dbData.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    /*
-                    Word (big size)
-                    Row -> pos and pronun
-                    Meanings
-                    Examples
-                    */
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          dbData[index]["word"],
-                          style: const TextStyle(
-                            fontSize: 30,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              dbData[index]["pos"],
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontStyle: FontStyle.italic,
+              child: Consumer<DatabaseHelper>(
+                builder: (context, dbProvider, child) {
+                  return FutureBuilder(
+                    future: dbProvider.readData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ),
-                            Text(
-                              "/${dbData[index]["pronunciation"]}/",
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontStyle: FontStyle.italic,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        snapshot.data![index]["word"],
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          dbProvider.deleteData(
+                                              snapshot.data![index]["word"]);
+                                        },
+                                        child: const BookmarkDelete(),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        snapshot.data![index]["pos"],
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                      Text(
+                                        "/${snapshot.data![index]["pronunciation"]}/",
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    "Meaning(s)",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    formatStr(
+                                      snapshot.data![index]["meanings"]
+                                          .toString(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  const Text(
+                                    "Example(s)",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(formatStr(snapshot.data![index]
+                                          ["examples"]
+                                      .toString())),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Meaning(s)",
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(formatStr(dbData[index]["meanings"].toString())),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Example(s)",
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(formatStr(dbData[index]["examples"].toString())),
-                      ],
-                    ),
+                            );
+                          },
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
                   );
                 },
               ),
@@ -165,6 +187,40 @@ class _BookmarksState extends State<Bookmarks> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class BookmarkDelete extends StatelessWidget {
+  const BookmarkDelete({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        const Icon(
+          Icons.bookmark,
+          color: Colors.black,
+        ),
+        Positioned(
+          right: 1,
+          bottom: 7,
+          child: Container(
+            padding: const EdgeInsets.all(1),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: const Text(
+              '-',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }

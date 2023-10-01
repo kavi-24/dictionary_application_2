@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseHelper {
+class DatabaseHelper with ChangeNotifier {
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
@@ -30,4 +31,11 @@ class DatabaseHelper {
     return database.query("dictionary");
   }
 
+  Future<int> deleteData(String word) async {
+    Database database = await initDB();
+    int del = await database
+        .delete("dictionary", where: "word = ?", whereArgs: [word]);
+    notifyListeners();
+    return del;
+  }
 }
